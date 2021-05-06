@@ -1,0 +1,54 @@
+﻿CREATE TABLE tournaments (
+	id SERIAL PRIMARY KEY,
+	format VARCHAR,
+	gametype VARCHAR,
+	date DATE
+);
+
+CREATE TABLE decks (
+	id SERIAL PRIMARY KEY,
+	tournament INTEGER REFERENCES tournaments(id) ON DELETE CASCADE,
+	mainboard VARCHAR[],
+	sideboard VARCHAR[]
+);
+
+CREATE TABLE games (
+	winner INTEGER REFERENCES decks(id) ON DELETE CASCADE,
+	loser INTEGER REFERENCES decks(id) ON DELETE CASCADE
+);
+
+CREATE TABLE clusters (
+	id SERIAL PRIMARY KEY,
+	mainboard VARCHAR[],
+	sideboard VARCHAR[],
+	frequency DECIMAL
+);
+
+CREATE TABLE significantmatchups (
+	winner INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
+	loser INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
+	winrate DECIMAL
+);
+
+CREATE TABLE similarclusters (
+	clustera INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
+	clusterb INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
+	distance INTEGER
+);
+
+CREATE TABLE cards (
+	name VARCHAR PRIMARY KEY,
+	frequency INTEGER
+);
+
+CREATE TABLE highlightcards (
+	cluster INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
+	card VARCHAR REFERENCES cards(name) ON DELETE CASCADE,
+	frequency DECIMAL
+);
+
+CREATE TABLE similarcards (
+	carda VARCHAR REFERENCES cards(name) ON DELETE CASCADE,
+	cardb VARCHAR REFERENCES cards(name) ON DELETE CASCADE,
+	cooccurences INTEGER
+);

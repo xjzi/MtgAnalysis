@@ -1,0 +1,45 @@
+@page "/decks"
+@using Website.Shared
+@inject HttpClient Http
+<style>
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+<h1>Decks</h1>
+
+<p>All of the most popular decks in modern.</p>
+
+@if (previews == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Highlights</th>
+				<th>Percent of Metagame</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (ClusterPreview preview in previews)
+			{
+				<tr>
+					<td style="white-space:pre-wrap; word-wrap:break-word">@string.Join(System.Environment.NewLine, preview.Highlights.Take(5))</td>
+					<td>@string.Format("{0:0.00}", preview.Frequency)</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+@code {
+	private ClusterPreview[] previews;
+
+	protected override async Task OnInitializedAsync()
+	{
+		previews = await Http.GetFromJsonAsync<ClusterPreview[]>("api/clusterpreviews");
+	}
+}
