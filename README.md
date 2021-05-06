@@ -4,3 +4,6 @@ From the decks and ranks, we can identify which decks beat which other decks bec
 This is uploaded to a Postgres SQL database whose machine is also hosting the crontab to check for tournaments on a daily basis and hosting the Selenium Remote Browser to load the required Javascript.
 The data from the SQL database is now used to cluster decks into archetypes, based on which cards they have in common. Some other statistics are also computed, and then they are added back to the database. 
 Then the Blazor frontend provides a JSON api for the business objects, such as cards and clusters. This api is used by the client to browse the statistics.
+
+# Configuration
+The password to the database should be an environment variable titled "mtganalysis_password", the server IP should be in "mtganalysis_ip", and the database should be a Postgres database which trusts local connections. The database should also be titled "tournaments", and have a user with the name "app" that has read/write privileges.
