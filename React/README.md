@@ -1,0 +1,2 @@
+# React.js
+This is the frontend of the project. All of the react javascript goes into `src` and `npm start` will use babel to output it into `MtgAnalysis/Node/public/` where Node.js will serve it. Node.js is also live reloaded, so React source can be edited and viewed without having to restart anything. All of the HTML and CSS should be put into `MtgAnalysis/Node/public/`.

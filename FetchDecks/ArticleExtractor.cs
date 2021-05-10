@@ -5,7 +5,7 @@ using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Website.Shared;
+using Shared;
 
 namespace FetchDecks
 {
