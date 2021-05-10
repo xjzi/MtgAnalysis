@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using Website.Shared;
+using Shared;
 
 namespace Clustering
 {
