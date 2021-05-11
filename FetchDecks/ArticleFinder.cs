@@ -18,14 +18,21 @@ namespace DeckAnalyzer
 		}
 	}
 
+	class Tournament
+	{
+		public string Url { get; set; }
+		public string CardSet { get; set; }
+		public string GameType { get; set; }
+	}
+
 	class ArticleFinder
 	{
 		const string linkBase = "https://magic.wizards.com/en/articles/archive/mtgo-standings/";
 		readonly string linkBaseWithTitle;
 
-		public ArticleFinder(string cardset, string competitionType)
+		public ArticleFinder(string cardset, string gametype)
 		{
-			linkBaseWithTitle = string.Concat(linkBase, cardset, ' ', competitionType).Replace(' ', '-').ToLower();
+			linkBaseWithTitle = string.Concat(linkBase, cardset, ' ', gametype).Replace(' ', '-').ToLower();
 		}
 
 		public IEnumerable<string> FindBySpan(DateTime start, DateTime end)

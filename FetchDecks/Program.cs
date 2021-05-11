@@ -13,6 +13,11 @@ namespace FetchDecks
 
 		static int Main(string[] args)
 		{
+			return Fetch(args);
+		}
+
+		static int Fetch(string[] args)
+		{
 			ArticleFinder finder = new ArticleFinder(format, gametype);
 			switch (args[0])
 			{
@@ -29,7 +34,7 @@ namespace FetchDecks
 				case "update":
 					{
 						DateTime yesterday = DateTime.Now.AddDays(-1);
-						return Extract (finder.FindBySpan(yesterday, yesterday));
+						return Extract(finder.FindBySpan(yesterday, yesterday));
 					}
 				default:
 					{
