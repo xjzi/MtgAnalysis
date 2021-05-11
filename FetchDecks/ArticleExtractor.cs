@@ -1,6 +1,5 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
-using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,19 +20,19 @@ namespace FetchDecks
 
 	class ArticleExtractor
 	{
-		static readonly HttpClient http = new HttpClient();
-		static readonly IBrowsingContext context = BrowsingContext.New(Configuration.Default);
-		readonly IDocument document;
+		static readonly HttpClient _http = new HttpClient();
+		static readonly IBrowsingContext _context = BrowsingContext.New(Configuration.Default);
+		readonly IDocument _document;
 
 		public ArticleExtractor(string url)
 		{
-			string source = http.GetStringAsync(url).Result;
-			document = context.OpenAsync(req => req.Content(source)).Result;
+			string source = _http.GetStringAsync(url).Result;
+			_document = _context.OpenAsync(req => req.Content(source)).Result;
 		}
 
 		public IEnumerable<DeckWithRank> GetDecks()
 		{
-			IElement[] decks = document.QuerySelectorAll(".decklists > div").ToArray();
+			IElement[] decks = _document.QuerySelectorAll(".decklists > div").ToArray();
 
 			for (int i = 0; i < decks.Length; i++)
 			{

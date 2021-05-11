@@ -8,57 +8,50 @@ namespace FetchDecks
 {
 	static class Program
 	{
-		const string format = "modern";
-		const string gametype = "challenge";
+		const string _format = "modern";
+		const string _gametype = "challenge";
 
-		static int Main(string[] args)
+		static void Main(string[] args)
 		{
-			return Fetch(args);
+			Fetch(new string[] { "quantity", "1" });
 		}
 
-		static int Fetch(string[] args)
+		static void Fetch(string[] args)
 		{
-			ArticleFinder finder = new ArticleFinder(format, gametype);
+			TournamentFinder finder = new TournamentFinder(_format, _gametype);
 			switch (args[0])
 			{
-				case "span":
-					{
-						DateTime start = DateTime.ParseExact(args[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-						DateTime end = DateTime.ParseExact(args[2], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-						return Extract(finder.FindBySpan(start, end));
-					}
 				case "quantity":
 					{
-						return Extract(finder.FindByQuantity(int.Parse(args[1])));
+						Extract(finder.FindByQuantity(int.Parse(args[1])));
+						break;
 					}
 				case "update":
 					{
-						DateTime yesterday = DateTime.Now.AddDays(-1);
-						return Extract(finder.FindBySpan(yesterday, yesterday));
+						Extract(finder.Update());
+						break;
 					}
 				default:
 					{
 						Console.WriteLine("syntax error");
-						return -1;
+						break;
 					}
 			}
 		}
 
-		static int Extract(IEnumerable<string> links)
+		static void Extract(IEnumerable<Tournament> tournaments)
 		{
-			int count = links.Count();
-			Console.WriteLine("Downloading {0} articles on {1}", count, DateTime.Now);
-			foreach (string link in links)
+			Console.WriteLine("Downloading {0} articles on {1}", tournaments.Count(), DateTime.Now);
+			foreach (Tournament tournament in tournaments)
 			{
-				ArticleExtractor extractor = new ArticleExtractor(link);
-				DeckWithRank[] decks = extractor.GetDecks().ToArray();
+				ArticleExtractor extractor = new ArticleExtractor(tournament.Url);
+				IEnumerable<DeckWithRank> decks = extractor.GetDecks();
 				IEnumerable<Game> games = GameProvider.GetGames(decks);
-				DataUploader uploader = new DataUploader(decks, games);
-				uploader.UploadTournament(format, gametype, DateTime.ParseExact(link[^10..], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture));
+				DataUploader uploader = new DataUploader(tournament, decks, games);
+				uploader.UploadTournament();
 				uploader.UploadDecks();
 				uploader.UploadGames();
 			}
-			return count;
 		}
 	}
 }

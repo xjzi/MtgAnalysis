@@ -8,13 +8,15 @@ namespace FetchDecks
 {
 	class DataUploader
 	{
-		readonly Deck[] _decks;
+		readonly Tournament _tournament;
+		readonly IEnumerable<Deck> _decks;
 		readonly IEnumerable<Game> _games;
 		int _tournamentID;
 		int _startingId = 0;
 
-		public DataUploader(Deck[] decks, IEnumerable<Game> games)
+		public DataUploader(Tournament tournament, IEnumerable<Deck> decks, IEnumerable<Game> games)
 		{
+			_tournament = tournament;
 			_decks = decks;
 			_games = games;
 		}
@@ -37,14 +39,14 @@ VALUES (
 			if (result != DBNull.Value) { _startingId = (int)result + 1; }
 
 			int i = _startingId;
-			for(int j = 0; j < _decks.Length; j++)
+			foreach(Deck deck in _decks)
 			{
-				_decks[j].Id = i;
+				deck.Id = i;
 				using NpgsqlCommand cmd = new NpgsqlCommand(insertDeck, con);
 				cmd.Parameters.AddWithValue("id", i);
 				cmd.Parameters.AddWithValue("tournamentid", _tournamentID);
-				cmd.Parameters.AddWithValue("mainboard", _decks[j].Mainboard.ToArray());
-				cmd.Parameters.AddWithValue("sideboard", _decks[j].Sideboard.ToArray());
+				cmd.Parameters.AddWithValue("mainboard", deck.Mainboard.ToArray());
+				cmd.Parameters.AddWithValue("sideboard", deck.Sideboard.ToArray());
 				cmd.ExecuteNonQuery();
 				i++;
 			}
@@ -69,20 +71,20 @@ VALUES (
 			}
 		}
 
-		public void UploadTournament(string format, string gametype, DateTime date)
+		public void UploadTournament()
 		{
 			const string insertTournament = @"INSERT INTO tournaments(format, gametype, date)
 VALUES (
-@format,
+@cardset,
 @gametype,
 @date )
 returning ""id"";";
 			using NpgsqlConnection con = new NpgsqlConnection(ConnectionDetails.connection);
 			con.Open();
 			using NpgsqlCommand cmd = new NpgsqlCommand(insertTournament, con);
-			cmd.Parameters.AddWithValue("format", format);
-			cmd.Parameters.AddWithValue("gametype", gametype);
-			cmd.Parameters.AddWithValue("date", date);
+			cmd.Parameters.AddWithValue("cardset", _tournament.CardSet);
+			cmd.Parameters.AddWithValue("gametype", _tournament.GameType);
+			cmd.Parameters.AddWithValue("date", _tournament.Date);
 			_tournamentID = (int)cmd.ExecuteScalar();
 		}
 	}
