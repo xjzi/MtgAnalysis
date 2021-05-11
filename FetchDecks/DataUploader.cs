@@ -1,73 +1,65 @@
 ﻿using Npgsql;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using Shared;
+using System.Collections.Generic;
+using static NpgsqlTypes.NpgsqlDbType;
 
 namespace FetchDecks
 {
 	class DataUploader
 	{
+		readonly NpgsqlConnection _con = new NpgsqlConnection(ConnectionDetails.connection);
 		readonly Tournament _tournament;
 		readonly IEnumerable<Deck> _decks;
 		readonly IEnumerable<Game> _games;
 		int _tournamentID;
-		int _startingId = 0;
 
 		public DataUploader(Tournament tournament, IEnumerable<Deck> decks, IEnumerable<Game> games)
 		{
 			_tournament = tournament;
 			_decks = decks;
 			_games = games;
+			_con.Open();
 		}
 
 		public void UploadDecks()
 		{
 			const string getCurrentId = "SELECT MAX(id) FROM DECKS;";
-			const string insertDeck = @"INSERT INTO decks
-VALUES (
-@id,
-@tournamentid,
-@mainboard,
-@sideboard);";
 
-			using NpgsqlConnection con = new NpgsqlConnection(ConnectionDetails.connection);
-			con.Open();
-
-			using NpgsqlCommand getId = new NpgsqlCommand(getCurrentId, con);
+			int nextId = 0;
+			using NpgsqlCommand getId = new NpgsqlCommand(getCurrentId, _con);
 			object result = getId.ExecuteScalar();
-			if (result != DBNull.Value) { _startingId = (int)result + 1; }
+			if (result != System.DBNull.Value) { nextId = (int)result + 1; }
 
-			int i = _startingId;
-			foreach(Deck deck in _decks)
+			using (NpgsqlBinaryImporter writer = _con.BeginBinaryImport("COPY decks FROM STDIN (FORMAT BINARY)"))
 			{
-				deck.Id = i;
-				using NpgsqlCommand cmd = new NpgsqlCommand(insertDeck, con);
-				cmd.Parameters.AddWithValue("id", i);
-				cmd.Parameters.AddWithValue("tournamentid", _tournamentID);
-				cmd.Parameters.AddWithValue("mainboard", deck.Mainboard.ToArray());
-				cmd.Parameters.AddWithValue("sideboard", deck.Sideboard.ToArray());
-				cmd.ExecuteNonQuery();
-				i++;
+				foreach (Deck deck in _decks)
+				{
+					deck.Id = nextId;
+					writer.StartRow();
+					writer.Write(deck.Id, Integer);
+					writer.Write(_tournamentID, Integer);
+					writer.Write(deck.Mainboard, Array | Varchar);
+					writer.Write(deck.Sideboard, Array | Varchar);
+					nextId++;
+				}
+				writer.Complete();
 			}
 		}
 
 		public void UploadGames()
 		{
-			const string insertGame = @"INSERT INTO GAMES
-VALUES (
-@winner,
-@loser
-); ";
-			using NpgsqlConnection con = new NpgsqlConnection(ConnectionDetails.connection);
-			con.Open();
-
 			foreach (Game game in _games)
 			{
-				using NpgsqlCommand cmd = new NpgsqlCommand(insertGame, con);
-				cmd.Parameters.AddWithValue("winner", game.Winner.Id);
-				cmd.Parameters.AddWithValue("loser", game.Loser.Id);
-				cmd.ExecuteNonQuery();
+				using (NpgsqlBinaryImporter writer = _con.BeginBinaryImport("COPY games FROM STDIN (FORMAT BINARY)"))
+				{
+					foreach (Deck deck in _decks)
+					{
+						writer.StartRow();
+						writer.Write(game.Winner.Id, Integer);
+						writer.Write(game.Loser.Id, Integer);
+					}
+					writer.Complete();
+				}
 			}
 		}
 
@@ -79,9 +71,8 @@ VALUES (
 @gametype,
 @date )
 returning ""id"";";
-			using NpgsqlConnection con = new NpgsqlConnection(ConnectionDetails.connection);
-			con.Open();
-			using NpgsqlCommand cmd = new NpgsqlCommand(insertTournament, con);
+
+			using NpgsqlCommand cmd = new NpgsqlCommand(insertTournament, _con);
 			cmd.Parameters.AddWithValue("cardset", _tournament.CardSet);
 			cmd.Parameters.AddWithValue("gametype", _tournament.GameType);
 			cmd.Parameters.AddWithValue("date", _tournament.Date);
