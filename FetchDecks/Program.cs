@@ -1,8 +1,8 @@
 ﻿using DeckAnalyzer;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Shared;
 
 namespace FetchDecks
 {
@@ -12,11 +12,6 @@ namespace FetchDecks
 		const string _gametype = "challenge";
 
 		static void Main(string[] args)
-		{
-			Fetch(new string[] { "quantity", "1" });
-		}
-
-		static void Fetch(string[] args)
 		{
 			TournamentFinder finder = new TournamentFinder(_format, _gametype);
 			switch (args[0])
