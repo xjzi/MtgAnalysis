@@ -30,7 +30,7 @@ namespace FetchDecks
 			_document = _context.OpenAsync(req => req.Content(source)).Result;
 		}
 
-		public IEnumerable<DeckWithRank> GetDecks()
+		public IEnumerable<Deck> GetDecks()
 		{
 			IElement[] decks = _document.QuerySelectorAll(".decklists > div").ToArray();
 
@@ -39,9 +39,8 @@ namespace FetchDecks
 				IElement mainboard = decks[i].QuerySelector(".sorted-by-overview-container");
 				IElement sideboard = decks[i].QuerySelector(".sorted-by-sideboard-container");
 
-				yield return new DeckWithRank
+				yield return new Deck
 				{
-					Rank = i,
 					Mainboard = GetCards(mainboard).ToArray(),
 					Sideboard = GetCards(sideboard).ToArray()
 				};

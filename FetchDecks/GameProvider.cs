@@ -4,9 +4,16 @@ using Shared;
 
 namespace FetchDecks
 {
-	static class GameProvider
+	class GameProvider
 	{
-		public static IEnumerable<Game> GetGames(IEnumerable<DeckWithRank> decks)
+		readonly Deck[] _decks;
+
+		public GameProvider(IEnumerable<Deck> decks)
+		{
+			_decks = decks.ToArray();
+		}
+
+		public IEnumerable<Game> GetGames()
 		{
 			for (int i = 32; i > 1; i /= 2)
 			{
@@ -14,8 +21,8 @@ namespace FetchDecks
 				{
 					yield return new Game
 					{
-						Winner = decks.First(x => x.Rank == j),
-						Loser = decks.First(x => x.Rank == i - j - 1)
+						Winner = _decks[j],
+						Loser = _decks[ i - j - 1]
 					};
 				}
 			}

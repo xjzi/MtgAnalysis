@@ -8,11 +8,18 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.15.0" />
-    <PackageReference Include="Npgsql" Version="5.0.4" />
+    <PackageReference Include="Npgsql" Version="5.0.5" />
+    <PackageReference Include="Tomlyn" Version="0.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="targets.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

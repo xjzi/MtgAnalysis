@@ -1,73 +1,90 @@
 ﻿using Shared;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Tomlyn;
+using Tomlyn.Model;
 
-namespace DeckAnalyzer
+namespace FetchDecks
 {
 	class TournamentFinder
 	{
-		readonly string _linkBase;
-		readonly string _cardSet;
-		readonly string _gameType;
+		//Schedule is in other file
+		readonly IEnumerable<string> _cardSets;
+		readonly IEnumerable<string> _gameTypes;
+		readonly HttpClient _client = new HttpClient();
 
-		public TournamentFinder(string cardset, string gametype)
+		public TournamentFinder()
 		{
-			const string linkBase = "https://magic.wizards.com/en/articles/archive/mtgo-standings/";
-			_linkBase = string.Concat(linkBase, cardset, ' ', gametype).Replace(' ', '-').ToLower();
-			_cardSet = cardset;
-			_gameType = gametype;
+			string conf = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "targets.conf"));
+			TomlTable toml = Toml.Parse(conf).ToModel();
+			_gameTypes = ((TomlArray)toml["gametypes"]).Cast<string>();
+			_cardSets = ((TomlArray)toml["cardsets"]).Cast<string>();
 		}
 
-		public IEnumerable<Tournament> Update()
+		public IEnumerable<Tournament> Back(int days)
 		{
-			//See note about schedules below.
-
-			DateTime now = DateTime.Now;
-			string link = GetLink(now);
-
-			if (LinkChecker.IsArticle(link))
+			DateTime first = DateTime.Now.AddDays(-1).Date;
+			DateTime last = first.AddDays(-days);
+			for (DateTime i = first; i > last; i = i.AddDays(-1))
 			{
-				yield return new Tournament
+				foreach (Tournament tournament in GetTargets(i))
 				{
-					Url = link,
-					Date = now,
-					CardSet = _cardSet,
-					GameType = _gameType
-				};
-			}
-		}
-
-		public IEnumerable<Tournament> FindByQuantity(int quantity)
-		{
-			//All tournament results are uploaded on regular schedules so this could be sped up.
-			//Different gametypes have different schedules though, so this would not be very flexible.
-			//Also, dependencies like this are confusing when the system changes.
-			//This method is only used to initially populate a database, so optimization is not very important.
-
-			int quantityFound = 0;
-			DateTime date = DateTime.Now;
-			while (quantityFound < quantity)
-			{
-				date = date.AddDays(-1);
-				string link = GetLink(date);
-				if (LinkChecker.IsArticle(link))
-				{
-					quantityFound++;
-					yield return new Tournament
-					{
-						Url = link,
-						Date = date,
-						CardSet = _cardSet,
-						GameType = _gameType
-					};
+					yield return tournament;
 				}
 			}
 		}
 
-		string GetLink(DateTime date)
+		IEnumerable<Tournament> GetTargets(DateTime date)
 		{
-			string formattedDate = date.ToString("-yyyy-MM-dd");
-			return string.Concat(_linkBase, formattedDate);
+			Tournament[] all = AllTargets(date).ToArray();
+			IEnumerable<Task<bool>> checks = all.Select(x => IsArticle(x.Url));
+			Task.WaitAll(Task.WhenAll(checks));
+			bool[] results = checks.Select(x => x.Result).ToArray();
+
+			for (int i = 0; i < all.Length; i++)
+			{
+				if (results[i]) { yield return all[i]; }
+			}
+		}
+
+		IEnumerable<Tournament> AllTargets(DateTime date)
+		{
+			foreach (string cardSet in _cardSets)
+			{
+				foreach (string gameType in _gameTypes)
+				{
+					Tournament tournament = new Tournament
+					{
+						CardSet = cardSet,
+						GameType = gameType,
+						Date = date
+					};
+
+					const string linkBase = "https://magic.wizards.com/en/articles/archive/mtgo-standings/";
+					string formattedDate = tournament.Date.ToString("yyyy-MM-dd");
+					string url = string.Concat(linkBase, tournament.CardSet, '-', tournament.GameType, '-', formattedDate);
+					tournament.Url = url.Replace(' ', '-').ToLower();
+
+					yield return tournament;
+				}
+			}
+		}
+
+		async Task<bool> IsArticle(string url)
+		{
+			const string defaultTitle = "Article Archives | MAGIC: THE GATHERING";
+
+			HttpRequestMessage request = new HttpRequestMessage { RequestUri = new Uri(url) };
+			request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(75, 113);
+
+			HttpResponseMessage response = await _client.SendAsync(request);
+			string content = await response.Content.ReadAsStringAsync();
+
+			return !content.Contains(defaultTitle);
 		}
 	}
 }

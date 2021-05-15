@@ -1,6 +1,6 @@
 ﻿CREATE TABLE tournaments (
 	id SERIAL PRIMARY KEY,
-	format VARCHAR,
+	cardset VARCHAR,
 	gametype VARCHAR,
 	date DATE
 );

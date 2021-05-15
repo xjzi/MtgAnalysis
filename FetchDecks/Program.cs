@@ -1,5 +1,4 @@
-﻿using DeckAnalyzer;
-using Shared;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,45 +7,46 @@ namespace FetchDecks
 {
 	static class Program
 	{
-		const string _format = "modern";
-		const string _gametype = "challenge";
-
 		static void Main(string[] args)
 		{
-			TournamentFinder finder = new TournamentFinder(_format, _gametype);
-			switch (args[0])
+			if (args.Length == 1 && int.TryParse(args[0], out int days))
 			{
-				case "quantity":
-					{
-						Extract(finder.FindByQuantity(int.Parse(args[1])));
-						break;
-					}
-				case "update":
-					{
-						Extract(finder.Update());
-						break;
-					}
-				default:
-					{
-						Console.WriteLine("syntax error");
-						break;
-					}
+				Scrape(days);
+			}
+			else
+			{
+				Console.WriteLine("Invalid parameters.");
+				Console.WriteLine("Running default.");
+				Scrape(5);
 			}
 		}
 
-		static void Extract(IEnumerable<Tournament> tournaments)
+		static void Scrape(int days)
 		{
+			TournamentFinder finder = new TournamentFinder();
+			IEnumerable<Tournament> tournaments = finder.Back(days).ToArray();
+
 			Console.WriteLine("Downloading {0} articles on {1}", tournaments.Count(), DateTime.Now);
+
 			foreach (Tournament tournament in tournaments)
 			{
 				ArticleExtractor extractor = new ArticleExtractor(tournament.Url);
-				IEnumerable<DeckWithRank> decks = extractor.GetDecks();
-				IEnumerable<Game> games = GameProvider.GetGames(decks);
-				DataUploader uploader = new DataUploader(tournament, decks, games);
-				uploader.UploadTournament();
-				uploader.UploadDecks();
-				uploader.UploadGames();
+
+				tournament.Decks = extractor.GetDecks().ToArray();
+
+				if (tournament.GameType == "challenge")
+				{
+					GameProvider gameProvider = new GameProvider(tournament.Decks);
+					tournament.Games = gameProvider.GetGames().ToArray();
+				}
+				else
+				{
+					tournament.Games = Enumerable.Empty<Game>();
+				}
 			}
+
+			DataUploader uploader = new DataUploader(tournaments);
+			uploader.Upload();
 		}
 	}
 }

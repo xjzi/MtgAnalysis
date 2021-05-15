@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Shared
 {
@@ -21,11 +22,13 @@ namespace Shared
 	}
 
 
-	public class Tournament
+	public class Tournament : SqlReferencedItem
 	{
 		public string Url { get; set; }
 		public string CardSet { get; set; }
 		public string GameType { get; set; }
 		public DateTime Date { get; set; }
+		public IEnumerable<Deck> Decks { get; set; }
+		public IEnumerable<Game> Games { get; set; }
 	}
 }
