@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using Shared;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using static NpgsqlTypes.NpgsqlDbType;
@@ -8,11 +9,13 @@ namespace FetchDecks
 {
 	class DataUploader
 	{
-		readonly NpgsqlConnection _con = new NpgsqlConnection(ConnectionDetails.connection);
+		readonly NpgsqlConnection _con;
 		readonly Tournament[] _tournaments;
 
 		public DataUploader(IEnumerable<Tournament> tournaments)
 		{
+			string connection = File.ReadAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "connection.txt"));
+			_con = new NpgsqlConnection(connection);
 			_tournaments = tournaments.ToArray();
 			_con.Open();
 		}
