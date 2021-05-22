@@ -14,9 +14,9 @@ namespace FetchDecks
 
 		public DataUploader(IEnumerable<Tournament> tournaments)
 		{
+			_tournaments = tournaments.ToArray();
 			string connection = File.ReadAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "connection.txt"));
 			_con = new NpgsqlConnection(connection);
-			_tournaments = tournaments.ToArray();
 			_con.Open();
 		}
 
@@ -25,6 +25,11 @@ namespace FetchDecks
 			UploadTournaments();
 			UploadDecks();
 			UploadGames();
+		}
+
+		public void Dispose()
+		{
+			_con.Dispose();
 		}
 
 		void UploadDecks()

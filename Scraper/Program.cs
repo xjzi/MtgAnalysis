@@ -47,6 +47,7 @@ namespace FetchDecks
 
 			DataUploader uploader = new DataUploader(tournaments);
 			uploader.Upload();
+			uploader.Dispose();
 		}
 	}
 }
