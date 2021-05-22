@@ -12,8 +12,4 @@ app.get("/api/clusters", async (req, res) => {
     res.json(api);
 });
 
-app.get("/api/", async (req, res) => {
-    res.json('Documentation here: https://github.com/Poultryghast/MtgAnalysis');
-});
-
 app.listen(port);

@@ -16,26 +16,15 @@ pool.on('error', (err, client) => {
 
 
 async function clusterPreviews() {
-    const clustersQuery = 'select id, frequency from clusters order by id;';
-    const highlightsQuery = 'select * from highlightcards;';
+    const query = 'select * from previews;';
 
     try {
         const client = await pool.connect();
-        let clustersResult = await client.query(clustersQuery);
-        let highlightsResult = await client.query(highlightsQuery);
-        var clusters = clustersResult.rows.map((obj) => {
-            obj.highlights = [];
-            return obj;
-        }); 
-        var highlights = highlightsResult.rows;
+        let result = await client.query(query);
+        client.release();
+        return result.rows;
     }
     catch(err) {
         return "SQL Database Error";
     }
-
-    for (var i = 0; i < highlights.length; i++) {
-        clusters[highlights[i].cluster].highlights.push({ card: highlights[i].card, frequency: highlights[i].frequency });
-    }
-
-    return clusters;
 }
