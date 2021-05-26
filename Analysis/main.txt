@@ -1,0 +1,17 @@
+source("download.txt")
+mdata <- download()
+
+source("cluster.txt")
+clustering <- cluster(mdata)
+
+cplot <- function()
+{
+	i <- 1
+	while(TRUE)
+	{
+		plot(1:length(clustering[[i]]), lengths(clustering[[i]]), pch=16, main=mdata[[i]]$name)
+		i <- i + 1
+		if(i > length(clustering)){i = 1}
+		readline(prompt="")
+	}
+}

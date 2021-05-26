@@ -1,9 +1,0 @@
-﻿CREATE ROLE SCRAPER WITH PASSWORD '***' LOGIN;
-
-GRANT SELECT ON TABLE tournaments to scraper;
-GRANT INSERT ON TABLE tournaments to scraper;
-
-GRANT SELECT ON TABLE decks to scraper;
-GRANT INSERT ON TABLE decks to scraper;
-
-GRANT INSERT ON TABLE games to scraper;

@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="connection.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,0 +1,32 @@
+library(meanShiftR)
+
+cluster <- function(cardsets)
+{
+	for(i in 1:length(cardsets))
+	{
+		mboard <- cardsets[[i]]$mboard
+		sboard <- cardsets[[i]]$sboard
+		
+		ucards <- unique(unlist(c(mboard, sboard), recursive = FALSE))
+		cardtable <- matrix(nrow=length(mboard), ncol=length(ucards))
+		colnames(cardtable) <- ucards
+	
+		for(j in 1:length(mboard))
+		{
+			cardtable[j,] <- table(c(ucards, mboard[[j]], sboard[[j]])) - 1
+		}
+		
+		c1 <- meanShift(cardtable, bandwidth = rep(4 , ncol(cardtable)), iterations = 30)
+		c2 <- table(c1$assignment)
+		c3 <- c2[which(c2 > 3)]
+		c4 <- names(c3)
+		
+		clusters <- vector("list", length=length(c4))
+		for(j in 1:length(c4))
+		{
+			clusters[[j]] <- which(c1$assignment == c4[j])
+		}
+		cardsets[[i]]$clusters <- clusters
+	}
+	return(lapply(cardsets, function(x){x$clusters}))
+}
