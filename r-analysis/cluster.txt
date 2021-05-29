@@ -1,32 +1,49 @@
-library(meanShiftR)
+library("meanShiftR")
+library("analogue")
+library(stats)
 
 cluster <- function(cardsets)
 {
+	clusters <- vector("list", length=length(cardsets))
 	for(i in 1:length(cardsets))
 	{
-		mboard <- cardsets[[i]]$mboard
-		sboard <- cardsets[[i]]$sboard
-		
-		ucards <- unique(unlist(c(mboard, sboard), recursive = FALSE))
-		cardtable <- matrix(nrow=length(mboard), ncol=length(ucards))
-		colnames(cardtable) <- ucards
-	
-		for(j in 1:length(mboard))
-		{
-			cardtable[j,] <- table(c(ucards, mboard[[j]], sboard[[j]])) - 1
-		}
-		
-		c1 <- meanShift(cardtable, bandwidth = rep(4 , ncol(cardtable)), iterations = 30)
-		c2 <- table(c1$assignment)
-		c3 <- c2[which(c2 > 3)]
-		c4 <- names(c3)
-		
-		clusters <- vector("list", length=length(c4))
-		for(j in 1:length(c4))
-		{
-			clusters[[j]] <- which(c1$assignment == c4[j])
-		}
-		cardsets[[i]]$clusters <- clusters
+		features <- cardfeatures(cardsets[[i]])
+		clusters[[i]] <- meanShift(features, bandwidth = rep(0.05 , ncol(features)))$assignment
 	}
-	return(lapply(cardsets, function(x){x$clusters}))
+	return(clusters)
+}
+
+cardfeatures <- function(cardset)
+{
+	mboard <- cardset$mboard
+	sboard <- cardset$sboard
+	
+	ucards <- unique(unlist(c(mboard, sboard), recursive = FALSE))
+	cardtable <- matrix(nrow=length(mboard), ncol=length(ucards))
+	colnames(cardtable) <- ucards
+	
+	for(j in 1:length(mboard))
+	{
+		cardtable[j,] <- table(c(ucards, mboard[[j]], sboard[[j]])) - 1
+	}
+		
+	chi <- distance(cardtable, method = "chi.square")
+	return(topfeatures(chi))
+}
+
+topfeatures <- function(d, pvar=0.9)
+{
+	G <- dist2gram(d)
+	SG <- svd(G)
+	V <- SG$d ^ 2
+	P <- V / sum(V)
+	R <- min(which(cumsum(P) > pvar))
+	return(SG$u[,1:R])
+}
+
+dist2gram <- function(d)
+{
+	d2 <- d^2
+	C <- diag(nrow(d2)) - 1/nrow(d2)
+	return(-0.5 * C %*% d2 %*% C)
 }

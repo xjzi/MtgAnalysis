@@ -3,6 +3,9 @@ mdata <- download()
 
 source("cluster.txt")
 clustering <- cluster(mdata)
+table(clustering[[2]])
+
+
 
 cplot <- function()
 {
