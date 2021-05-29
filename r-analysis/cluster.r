@@ -2,20 +2,15 @@ library("meanShiftR")
 library("analogue")
 library(stats)
 
-allclusters <- function(cardsets)
+getclusters <- function(cardset)
 {
-	clusters <- vector("list", length=length(cardsets))
-	for(i in 1:length(cardsets))
-	{
-		features <- allfeatures(cardsets[[i]])
-		clusters[[i]] <- cluster(features, 4)
-	}
-	return(clusters)
+	features <- allfeatures(cardset)
+	return(cluster(topfeatures(features), 4))
 }
 
 cluster <- function(data, bandwidth)
 {
-	return(meanShift(data, bandwidth = rep(4, ncol(data)))$assignment)
+	return(meanShift(data, bandwidth = rep(0.03, ncol(data)))$assignment)
 }
 
 allfeatures <- function(cardset)
@@ -38,7 +33,6 @@ allfeatures <- function(cardset)
 topfeatures <- function(allfeatures, pvar=0.9)
 {
 	d <- distance(allfeatures, method = "chi.square")
-	
 	G <- dist2gram(d)
 	SG <- svd(G)
 	V <- SG$d ^ 2
