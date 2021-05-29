@@ -1,11 +1,12 @@
 source("download.txt")
 mdata <- download()
 
-source("cluster.txt")
-clustering <- cluster(mdata)
-table(clustering[[2]])
-
-
+test <- function()
+{
+	source("cluster.txt")
+	clustering <- allclusters(mdata[2:2])
+	plot(table(clustering[[1]]))
+}
 
 cplot <- function()
 {

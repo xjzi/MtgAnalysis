@@ -2,37 +2,43 @@ library("meanShiftR")
 library("analogue")
 library(stats)
 
-cluster <- function(cardsets)
+allclusters <- function(cardsets)
 {
 	clusters <- vector("list", length=length(cardsets))
 	for(i in 1:length(cardsets))
 	{
-		features <- cardfeatures(cardsets[[i]])
-		clusters[[i]] <- meanShift(features, bandwidth = rep(0.05 , ncol(features)))$assignment
+		features <- allfeatures(cardsets[[i]])
+		clusters[[i]] <- cluster(features, 4)
 	}
 	return(clusters)
 }
 
-cardfeatures <- function(cardset)
+cluster <- function(data, bandwidth)
+{
+	return(meanShift(data, bandwidth = rep(4, ncol(data)))$assignment)
+}
+
+allfeatures <- function(cardset)
 {
 	mboard <- cardset$mboard
 	sboard <- cardset$sboard
 	
 	ucards <- unique(unlist(c(mboard, sboard), recursive = FALSE))
 	cardtable <- matrix(nrow=length(mboard), ncol=length(ucards))
-	colnames(cardtable) <- ucards
 	
 	for(j in 1:length(mboard))
 	{
-		cardtable[j,] <- table(c(ucards, mboard[[j]], sboard[[j]])) - 1
+		deck <- table(c(ucards, mboard[[j]], sboard[[j]])) - 1
+		cardtable[j,] <- deck
 	}
-		
-	chi <- distance(cardtable, method = "chi.square")
-	return(topfeatures(chi))
+	
+	return(cardtable)
 }
 
-topfeatures <- function(d, pvar=0.9)
+topfeatures <- function(allfeatures, pvar=0.9)
 {
+	d <- distance(allfeatures, method = "chi.square")
+	
 	G <- dist2gram(d)
 	SG <- svd(G)
 	V <- SG$d ^ 2
