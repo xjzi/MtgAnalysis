@@ -1,13 +1,13 @@
 suppressPackageStartupMessages(library("mclust"))
 
-cluster <- function(f)
+cluster <- function(f, g)
 {
-	return(Mclust(f, G=32, verbose=FALSE)$classification)
+	return(Mclust(f, G=f, verbose=FALSE)$classification)
 }
 
 rmnoise <- function(c, f)
 {
-	d <- sapply(1:length(unique(c)), function(i)
+	d <- sapply(unique(c), function(i)
 	{
 		decks <- f[c == i,]
 		return(mean(dist(decks)))
