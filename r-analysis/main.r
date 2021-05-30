@@ -4,8 +4,11 @@ mdata <- download()
 source("features.r")
 source("cluster.r")
 
-for(i in 1:length(mdata))
+mdata <- lapply(mdata, function(cardset)
 {
-	features <- chi(cardtable(mdata[[2]]))
-	classification <- rmnoise(cluster(features), features)
-}
+	features <- cardtable(cardset)
+	chifeatures <- chi(features)
+	classification <- cluster(features)
+	cardset$classification <- rmnoise(classification, features)
+	return(cardset)
+})

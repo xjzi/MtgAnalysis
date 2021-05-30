@@ -1,4 +1,4 @@
-library("analogue")
+suppressPackageStartupMessages(library("analogue"))
 library("stats")
 
 cardtable <- function(cardset)
@@ -18,9 +18,9 @@ cardtable <- function(cardset)
 	return(features)
 }
 
-chi <- function(allfeatures, pvar=0.9)
+chi <- function(features, pvar=0.9)
 {
-	d <- distance(allfeatures, method = "chi.square")
+	d <- distance(features, method = "chi.square")
 	d2 <- d^2
 	C <- diag(nrow(d2)) - 1/nrow(d2)
 	G <- -0.5 * C %*% d2 %*% C

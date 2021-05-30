@@ -1,4 +1,4 @@
-library("mclust")
+suppressPackageStartupMessages(library("mclust"))
 
 cluster <- function(f)
 {

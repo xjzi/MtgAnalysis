@@ -7,25 +7,23 @@ download <- function()
 	
 	names <- dbGetQuery(con, 'select distinct cardset from tournaments')[[1]]
 
-	front <- 'select a.id, a.tournament, array_to_string(a.mainboard, \'\'), array_to_string(a.sideboard, \'\') from decks a inner join tournaments b on a.tournament = b.id where b.cardset = \''
+	front <- 'select d.id, d.tournament, array_to_string(d.mainboard, \'\'), array_to_string(d.sideboard, \'\') from decks d inner join tournaments t on d.tournament = t.id where t.cardset = \''
 
 	back <- '\';'
 
-	mdata <- vector("list", length=length(names))
-	for(i in 1:length(names))
+	mdata <- lapply(1:length(names), function(i)
 	{
 		query <- paste(front, names[i], back, sep = "")
 		result <- dbGetQuery(con, query)
 		
-		item <- list()
-		item$id <- result[[1]]
-		item$tournament <- result[[2]]
-		item$mboard <- lapply(result[[3]], function(x) as.character(unlist(strsplit(x, "", fixed=T))))
-		item$sboard <- lapply(result[[4]], function(x) as.character(unlist(strsplit(x, "", fixed=T))))
-		item$name <- names[i]
-		
-		mdata[[i]] <- item
-	}
+		cardset <- list()
+		cardset$id <- result[[1]]
+		cardset$tournament <- result[[2]]
+		cardset$mboard <- lapply(result[[3]], function(x) as.character(unlist(strsplit(x, "", fixed=T))))
+		cardset$sboard <- lapply(result[[4]], function(x) as.character(unlist(strsplit(x, "", fixed=T))))
+		cardset$name <- names[i]
+		return(cardset)
+	})
 
 	dbDisconnect(con)
 	return(mdata)
