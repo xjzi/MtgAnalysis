@@ -1,11 +1,10 @@
 ﻿using Npgsql;
-using Shared;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using static NpgsqlTypes.NpgsqlDbType;
 
-namespace FetchDecks
+namespace Scraper
 {
 	class DataUploader
 	{

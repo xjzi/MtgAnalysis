@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Shared;
 
-namespace FetchDecks
+namespace Scraper
 {
 	class GameProvider
 	{
@@ -22,7 +21,7 @@ namespace FetchDecks
 					yield return new Game
 					{
 						Winner = _decks[j],
-						Loser = _decks[ i - j - 1]
+						Loser = _decks[i - j - 1]
 					};
 				}
 			}

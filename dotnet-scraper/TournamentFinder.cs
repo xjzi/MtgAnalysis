@@ -1,5 +1,4 @@
-﻿using Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 using Tomlyn;
 using Tomlyn.Model;
 
-namespace FetchDecks
+namespace Scraper
 {
 	class TournamentFinder
 	{

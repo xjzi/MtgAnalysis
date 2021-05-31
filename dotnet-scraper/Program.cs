@@ -1,9 +1,8 @@
-﻿using Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FetchDecks
+namespace Scraper
 {
 	static class Program
 	{
