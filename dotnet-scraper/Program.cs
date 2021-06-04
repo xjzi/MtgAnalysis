@@ -16,7 +16,7 @@ namespace Scraper
 			{
 				Console.WriteLine("Invalid parameters.");
 				Console.WriteLine("Running default.");
-				Scrape(5);
+				Scrape(1);
 			}
 		}
 

@@ -19,36 +19,18 @@ CREATE TABLE games (
 
 CREATE TABLE clusters (
 	id SERIAL PRIMARY KEY,
-	mainboard VARCHAR[],
-	sideboard VARCHAR[],
-	frequency DECIMAL
-);
-
-CREATE TABLE significantmatchups (
-	winner INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
-	loser INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
-	winrate DECIMAL
-);
-
-CREATE TABLE similarclusters (
-	clustera INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
-	clusterb INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
-	distance INTEGER
+	centroid INTEGER REFERENCES decks(id) ON DELETE CASCADE,
+	size DECIMAL
 );
 
 CREATE TABLE cards (
-	name VARCHAR PRIMARY KEY,
-	frequency INTEGER
+	name VARCHAR,
+	deck INTEGER REFERENCES decks(id) ON DELETE CASCADE,
+	inmainboard BOOLEAN
 );
 
-CREATE TABLE highlightcards (
+CREATE TABLE highlights (
 	cluster INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
-	card VARCHAR REFERENCES cards(name) ON DELETE CASCADE,
-	frequency DECIMAL
-);
-
-CREATE TABLE similarcards (
-	carda VARCHAR REFERENCES cards(name) ON DELETE CASCADE,
-	cardb VARCHAR REFERENCES cards(name) ON DELETE CASCADE,
-	cooccurences INTEGER
+	card VARCHAR,
+	occurences DECIMAL
 );

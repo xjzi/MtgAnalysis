@@ -23,6 +23,7 @@ namespace Scraper
 		{
 			UploadTournaments();
 			UploadDecks();
+			UploadCards();
 			UploadGames();
 		}
 
@@ -45,9 +46,38 @@ namespace Scraper
 						writer.StartRow();
 						writer.Write(deck.Id, Integer);
 						writer.Write(tournament.Id, Integer);
-						writer.Write(deck.Mainboard, Array | Varchar);
-						writer.Write(deck.Sideboard, Array | Varchar);
 						id++;
+					}
+				}
+				writer.Complete();
+			}
+		}
+
+		void UploadCards()
+		{
+			using (NpgsqlBinaryImporter writer = _con.BeginBinaryImport("COPY cards FROM STDIN (FORMAT BINARY)"))
+			{
+				foreach(Tournament tournament in _tournaments)
+				{
+					foreach (Deck deck in tournament.Decks)
+					{
+						foreach (string card in deck.Mainboard)
+						{
+							UploadCard(card, true);
+						}
+
+						foreach (string card in deck.Sideboard)
+						{
+							UploadCard(card, false);
+						}
+
+						void UploadCard(string card, bool inMainboard)
+						{
+							writer.StartRow();
+							writer.Write(card, Varchar);
+							writer.Write(deck.Id, Integer);
+							writer.Write(inMainboard, Boolean);
+						}
 					}
 				}
 				writer.Complete();
@@ -87,7 +117,7 @@ namespace Scraper
 			}
 		}
 
-		public int GetNextId(string table, string column = "id")
+		int GetNextId(string table, string column = "id")
 		{
 			string sql = string.Format("SELECT COALESCE(MAX({0}), -1) FROM {1};", column, table);
 			NpgsqlCommand command = new NpgsqlCommand(sql, _con);
