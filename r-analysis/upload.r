@@ -1,2 +1,12 @@
 library(DBI)
-dbAppendTable(con, "tmp", data.frame("field"=c(1, 5, 7, 3)), row.names = NULL)
+
+upload <- function(clusters)
+{
+	source("connection.txt")
+	con <- connect()
+	centroids <- lapply(clusters, function(x){ x$centroid })
+	sizes <- lapply(clusters, function(x){ x$frequency })
+	
+	dbAppendTable(con, "clusters", data.frame("centroid"=centroids, "size"=sizes))
+	dbDisconnect(con)
+}

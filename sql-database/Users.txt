@@ -10,3 +10,5 @@ CREATE ROLE analysis WITH PASSWORD '***' LOGIN;
 GRANT SELECT ON TABLE tournaments TO analysis;
 GRANT SELECT ON TABLE decks TO analysis;
 GRANT SELECT ON TABLE games TO analysis;
+GRANT SELECT ON TABLE cards TO analysis;
+GRANT INSERT ON TABLE clusters to analysis;
