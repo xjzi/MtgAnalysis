@@ -1,14 +1,12 @@
 ﻿CREATE ROLE scraper WITH PASSWORD '***' LOGIN;
-GRANT SELECT ON TABLE tournaments TO scraper;
-GRANT INSERT ON TABLE tournaments TO scraper;
-GRANT SELECT ON TABLE decks TO scraper;
-GRANT INSERT ON TABLE decks TO scraper;
-GRANT INSERT ON TABLE games to scraper;
-GRANT INSERT ON TABLE cards to scraper;
+GRANT SELECT, INSERT ON TABLE tournaments TO scraper;
+GRANT SELECT, INSERT ON TABLE decks TO scraper;
+GRANT SELECT, INSERT ON TABLE games TO scraper;
 
 CREATE ROLE analysis WITH PASSWORD '***' LOGIN;
 GRANT SELECT ON TABLE tournaments TO analysis;
 GRANT SELECT ON TABLE decks TO analysis;
 GRANT SELECT ON TABLE games TO analysis;
 GRANT SELECT ON TABLE cards TO analysis;
-GRANT INSERT ON TABLE clusters to analysis;
+GRANT SELECT, INSERT, DELETE ON TABLE clusters to analysis;
+GRANT USAGE ON SEQUENCE clusters_id_seq to analysis;

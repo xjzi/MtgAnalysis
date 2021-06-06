@@ -1,9 +1,6 @@
-centroid <- function(f, classification, c)
+getcentroid <- function(features)
 {
-	i <- which(classification == c)
-	decks <- f[i,]
-
-	d <- as.matrix(dist(decks))
+	d <- as.matrix(dist(features))
 	s <- as.matrix(rowSums(d))
-	return(i[which.min((s))])
+	return(which.min((s)))
 }

@@ -27,22 +27,36 @@ getclusters <- function(cardtables)
 		cardtable <- cardtables[[i]]
 
 		chifeatures <- chi(cardtable)
-		classification <- getcluster(chifeatures, g)
-		classification <- rmnoise(classification, chifeatures)
+		classification <- rmnoise(getcluster(chifeatures, g), chifeatures)
+		
 		ctable <- table(classification[classification > 0])
 		indices <- as.integer(names(ctable))
 		frequencies <- as.vector(ctable)
 		
+		cardset <- names(cardtables)[[i]]
+		
 		clusters <- lapply(1:length(ctable), function(j)
 		{
 			cluster <- list()
-			centroid <- centroid(chifeatures, classification, indices[j])
-			cluster$centroid <- rownames(cardtable)[centroid]
+			members <- which(classification == indices[j])
+			
+			if(length(members) == 1)
+			{ 
+				centroid <- members[1]
+			}
+			else
+			{
+				features <- chifeatures[members,]
+				centroid <- members[getcentroid(features)]
+			}
+
+			cluster$centroid <- centroid
 			cluster$frequency <- frequencies[j]
-			cluster$cardset <- names(cardtables)[[i]]
+			cluster$cardset <- cardset
+
 			return(cluster)
 		})
-		
+
 		return(clusters)
 		
 	}), recursive=FALSE))

@@ -4,8 +4,12 @@ upload <- function(clusters)
 {
 	source("connection.txt")
 	con <- connect()
-	centroids <- lapply(clusters, function(x){ x$centroid })
-	sizes <- lapply(clusters, function(x){ x$frequency })
+	
+	# Old analysis is discarded
+	dbExecute(con, "DELETE FROM clusters;")
+	
+	centroids <- unlist(lapply(clusters, function(x){ x$centroid }))
+	sizes <- unlist(lapply(clusters, function(x){ x$frequency }))
 	
 	dbAppendTable(con, "clusters", data.frame("centroid"=centroids, "size"=sizes))
 	dbDisconnect(con)

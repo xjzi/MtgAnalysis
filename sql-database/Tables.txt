@@ -28,9 +28,3 @@ CREATE TABLE cards (
 	deck INTEGER REFERENCES decks(id) ON DELETE CASCADE,
 	inmainboard BOOLEAN
 );
-
-CREATE TABLE highlights (
-	cluster INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
-	card VARCHAR,
-	occurences DECIMAL
-);
