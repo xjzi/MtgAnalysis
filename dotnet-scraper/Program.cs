@@ -25,7 +25,12 @@ namespace Scraper
 			TournamentFinder finder = new TournamentFinder();
 			IEnumerable<Tournament> tournaments = finder.Back(days).ToArray();
 
-			Console.WriteLine("Downloading {0} articles on {1}", tournaments.Count(), DateTime.Now);
+			Npgsql.NpgsqlConnection con = SqlConnection.Connect();
+
+			TournamentFilter filter = new TournamentFilter(con, tournaments);
+			tournaments = filter.GetValidTournaments();
+
+			Console.WriteLine("Downloading {0} tournaments on {1}", tournaments.Count(), DateTime.Now);
 
 			foreach (Tournament tournament in tournaments)
 			{
@@ -44,7 +49,7 @@ namespace Scraper
 				}
 			}
 
-			DataUploader uploader = new DataUploader(tournaments);
+			DataUploader uploader = new DataUploader(con, tournaments);
 			uploader.Upload();
 			uploader.Dispose();
 		}

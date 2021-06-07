@@ -1,6 +1,5 @@
 ﻿using Npgsql;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using static NpgsqlTypes.NpgsqlDbType;
 
@@ -11,12 +10,10 @@ namespace Scraper
 		readonly NpgsqlConnection _con;
 		readonly Tournament[] _tournaments;
 
-		public DataUploader(IEnumerable<Tournament> tournaments)
+		public DataUploader(NpgsqlConnection con, IEnumerable<Tournament> tournaments)
 		{
 			_tournaments = tournaments.ToArray();
-			string connection = File.ReadAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "connection.txt"));
-			_con = new NpgsqlConnection(connection);
-			_con.Open();
+			_con = con;
 		}
 
 		public void Upload()
@@ -57,7 +54,7 @@ namespace Scraper
 		{
 			using (NpgsqlBinaryImporter writer = _con.BeginBinaryImport("COPY cards FROM STDIN (FORMAT BINARY)"))
 			{
-				foreach(Tournament tournament in _tournaments)
+				foreach (Tournament tournament in _tournaments)
 				{
 					foreach (Deck deck in tournament.Decks)
 					{

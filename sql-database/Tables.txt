@@ -28,3 +28,10 @@ CREATE TABLE cards (
 	deck INTEGER REFERENCES decks(id) ON DELETE CASCADE,
 	inmainboard BOOLEAN
 );
+
+CREATE TABLE tmp_tournaments (
+	index INTEGER,
+	cardset VARCHAR,
+	gametype VARCHAR,
+	date DATE
+);
