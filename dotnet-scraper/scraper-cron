@@ -1,1 +1,0 @@
-0 0 * * * /usr/bin/dotnet Scraper.dll 1 >> scraper.log 2>&1
