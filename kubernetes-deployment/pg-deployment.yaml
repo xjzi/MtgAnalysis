@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: pg-db
+spec:
+ replicas: 1
+ selector:
+      matchLabels:
+        app.kubernetes.io/app: postgres
+ template:
+   metadata:
+      labels:
+        app.kubernetes.io/app: postgres
+   spec:
+     containers:
+     - name: pg
+       image: postgres:latest
+       imagePullPolicy: IfNotPresent
+       ports:
+         - containerPort: 5432
+       envFrom:
+         - configMapRef:
+             name: pg-config
+       volumeMounts:
+         - mountPath: /var/lib/postgresql/data
+           name: pg-data
+           subPath: postgres
+     volumes:
+       - name: pg-data
+         persistentVolumeClaim:
+           claimName: pg-claim
