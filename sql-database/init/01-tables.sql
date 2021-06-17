@@ -7,9 +7,7 @@
 
 CREATE TABLE decks (
 	id SERIAL PRIMARY KEY,
-	tournament INTEGER REFERENCES tournaments(id) ON DELETE CASCADE,
-	mainboard VARCHAR[],
-	sideboard VARCHAR[]
+	tournament INTEGER REFERENCES tournaments(id) ON DELETE CASCADE
 );
 
 CREATE TABLE games (
