@@ -1,6 +1,5 @@
 ﻿using System;
 using Npgsql;
-using System.IO;
 
 namespace Scraper
 {
@@ -8,7 +7,8 @@ namespace Scraper
 	{
 		public static NpgsqlConnection Connect()
 		{
-			string connection = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "connection.txt"));
+			string password = Environment.GetEnvironmentVariable("PASSWORD");
+			string connection = string.Format("Host=db;Username=scraper;Password={0};Database=postgres", password);
 			NpgsqlConnection con = new NpgsqlConnection(connection);
 			con.Open();
 			return con;

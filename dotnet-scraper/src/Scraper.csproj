@@ -13,9 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="connection.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="targets.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
