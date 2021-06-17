@@ -1,1 +1,0 @@
-cd /bin && /usr/bin/dotnet Scraper.dll 1
