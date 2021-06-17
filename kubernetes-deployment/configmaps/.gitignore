@@ -1,0 +1,5 @@
+# All configmaps should be ignored
+*
+
+# Keep this file
+!.gitignore
