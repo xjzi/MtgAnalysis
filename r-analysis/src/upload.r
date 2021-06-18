@@ -2,7 +2,7 @@ library(DBI)
 
 upload <- function(clusters)
 {
-	source("connection.txt")
+	source("connection.r")
 	con <- connect()
 	
 	# Old analysis is discarded
