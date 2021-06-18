@@ -5,4 +5,4 @@ The results are used to cluster decks into archetypes, based on which cards they
 A Node.js REST API exposes some of these statistics which are used by the React.js frontend.
 
 # Configuration
-There are connection.txt files for parts of the project that need database access. These just contain the necessary connection strings.
+The scraper and processing read passwords for database access from the environment variable PASSWORD. The database also uses environment variables SCRAPER and ANALYSIS for the passwords of those users.
