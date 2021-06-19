@@ -3,7 +3,7 @@ library(DBI)
 connect <- function()
 {
 	con <- dbConnect(RPostgres::Postgres(),
-	dbname = "tournaments",
+	dbname = "postgres",
 	host = "db",
 	port = 5432,
 	user = "analysis",
