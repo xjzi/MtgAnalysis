@@ -14,7 +14,7 @@ spec:
    spec:
      containers:
      - name: pg
-       image: postgres:latest
+       image: poultryghast/sql_database
        imagePullPolicy: IfNotPresent
        ports:
          - containerPort: 5432
