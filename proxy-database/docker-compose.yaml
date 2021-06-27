@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  db:
+    image: poultryghast/sql_database
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: password
+        ANALYSIS: password
+        SCRAPER: password
+    volumes: 
+      - data:/var/lib/postgresql/data
+volumes:
+  data:
