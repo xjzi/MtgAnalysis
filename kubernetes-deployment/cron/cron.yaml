@@ -1,0 +1,26 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cron
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+          - name: scraper
+            image: poultryghast/dotnet_scraper
+            imagePullPolicy: IfNotPresent
+            envFrom:
+              - configMapRef:
+                  name: scraper-config
+          containers:
+            - name: analysis
+              image: poultryghast/r_analysis
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: analysis-config
+          restartPolicy: Never
+      backoffLimit: 1
