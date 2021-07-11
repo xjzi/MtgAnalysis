@@ -49,6 +49,8 @@ namespace Scraper
 
 		IEnumerable<string> GetCards(IElement container)
 		{
+			if(container == null){ yield break; }
+
 			IEnumerable<string[]> cards = container.QuerySelectorAll("*.row").Select(x => x.TextContent.HtmlClean());
 			foreach (string[] card in cards)
 			{
