@@ -46,7 +46,7 @@ getclusters <- function(cardtables, g, top)
 			cluster$centroid <- members[getcentroid(features)]
 
 			cardfreq <- colSums(cardtable[members , , drop=FALSE])
-			sortedcardfreq <- sort(which(cardfreq > 0), decreasing=TRUE)
+			sortedcardfreq <- sort(cardfreq[cardfreq > 0], decreasing=TRUE)
 			cluster$topcards <- head(sortedcardfreq, top)
 
 			return(cluster)

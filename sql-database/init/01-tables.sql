@@ -27,6 +27,12 @@ CREATE TABLE cards (
 	inmainboard BOOLEAN
 );
 
+CREATE TABLE top_cards (
+	name VARCHAR,
+	cluster INTEGER REFERENCES clusters(id) ON DELETE CASCADE,
+	frequency INTEGER
+)
+
 CREATE TABLE tmp_tournaments (
 	index INTEGER,
 	cardset VARCHAR,

@@ -14,6 +14,6 @@ psql --username postgres <<-EOSQL
 	GRANT SELECT ON TABLE decks TO analysis;
 	GRANT SELECT ON TABLE games TO analysis;
 	GRANT SELECT ON TABLE cards TO analysis;
-	GRANT SELECT, INSERT, DELETE ON TABLE clusters to analysis;
-	GRANT USAGE ON SEQUENCE clusters_id_seq to analysis;
+	GRANT INSERT, DELETE ON TABLE top_cards TO analysis;
+	GRANT INSERT, DELETE ON TABLE clusters TO analysis;
 EOSQL
