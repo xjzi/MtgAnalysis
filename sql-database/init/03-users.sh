@@ -16,5 +16,11 @@ psql --username postgres <<-EOSQL
 	GRANT SELECT ON TABLE cards TO analysis;
 	GRANT INSERT, DELETE ON TABLE top_cards TO analysis;
 	GRANT INSERT, DELETE ON TABLE clusters TO analysis;
-	GRANT USAGE ON SEQUENCE clusters_id_seq to analysis;
+	GRANT USAGE ON SEQUENCE clusters_id_seq TO analysis;
+
+	CREATE ROLE api WITH PASSWORD '$API' LOGIN;
+	GRANT SELECT ON TABLE clusters TO api;
+	GRANT SELECT ON TABLE top_cards TO api;
+	GRANT SELECT ON TABLE decks to api;
+	GRANT SELECT ON TABLE denornalized_clusters to api;
 EOSQL
