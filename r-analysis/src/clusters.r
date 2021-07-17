@@ -24,6 +24,7 @@ getclusters <- function(cardtables, g, top)
 	return(unlist(lapply(1:length(cardtables), function(i)
 	{
 		cardtable <- cardtables[[i]]
+		deckids <- names(cardtable[,1])
 
 		chifeatures <- chi(cardtable)
 		classification <- rmnoise(getcluster(chifeatures, g), chifeatures)
@@ -43,7 +44,8 @@ getclusters <- function(cardtables, g, top)
 			members <- which(classification == indices[j])
 
 			features <- chifeatures[members , , drop=FALSE]
-			cluster$centroid <- members[getcentroid(features)]
+			centroidmember <- members[getcentroid(features)]
+			cluster$centroid <- deckids[centroidmember]
 
 			cardfreq <- colSums(cardtable[members , , drop=FALSE])
 			sortedcardfreq <- sort(cardfreq[cardfreq > 0], decreasing=TRUE)
