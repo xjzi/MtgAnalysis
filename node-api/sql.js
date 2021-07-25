@@ -1,8 +1,5 @@
 const { Pool } = require('pg');
 
-module.exports.previews = previews;
-module.exports.cluster = cluster;
-
 const pool = new Pool({
     user: 'api',
     host: 'db',
@@ -27,14 +24,19 @@ async function dbquery(query, parameters){
     }
 }
 
-async function previews(cardset) {
+exports.previews = async function previews(cardset) {
     const query = 'SELECT id, top_cards FROM denormalized_clusters WHERE cardset = $1 ORDER BY size DESC;';
     parameters = [ cardset ];
     return await dbquery(query, parameters);
 }
 
-async function cluster(id) {
+exports.cluster = async function cluster(id) {
     const query = 'SELECT mainboard, sideboard FROM denormalized_clusters WHERE id = $1;';
     parameters = [ id ];
     return await dbquery(query, parameters);
+}
+
+exports.cardsets = async function cardsets() {
+    const query = 'SELECT DISTINCT cardset FROM tournaments;';
+    return await dbquery(query, []);
 }

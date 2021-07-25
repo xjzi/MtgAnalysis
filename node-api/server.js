@@ -19,4 +19,10 @@ app.get("/api/cluster/:id", async (req, res) => {
     res.json(api.res);
 });
 
+app.get("/api/cardsets", async (req, res) => {
+    const api = await sql.cardsets();
+    res.status(api.status);
+    res.json(api.res);
+});
+
 app.listen(port);
