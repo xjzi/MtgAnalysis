@@ -22,5 +22,6 @@ psql --username postgres <<-EOSQL
 	GRANT SELECT ON TABLE clusters TO api;
 	GRANT SELECT ON TABLE top_cards TO api;
 	GRANT SELECT ON TABLE decks to api;
+	GRANT SELECT ON TABLE tournaments to api;
 	GRANT SELECT ON TABLE denornalized_clusters to api;
 EOSQL
