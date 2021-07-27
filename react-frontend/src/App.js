@@ -1,14 +1,18 @@
 import './App.css';
-import './Previews';
-import Previews from './Previews';
+
+import Links from "./links/Links";
+import MainSwitch from './common/MainSwitch';
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Modern Decks</h1>
-        <Previews/>
-      </header>
+    <div className="app">
+      <div className="content">
+        <Router>
+          <Links/>
+          <MainSwitch/>
+        </Router>
+      </div>
     </div>
   );
 }

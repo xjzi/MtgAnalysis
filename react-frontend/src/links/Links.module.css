@@ -1,0 +1,9 @@
+.link-box {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.link {
+    margin: 2%;
+}

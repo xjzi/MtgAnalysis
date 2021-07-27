@@ -1,34 +1,24 @@
-.App {
+.app {
+  background-color: #000000;
+  color: #808080;
+  display: flex;
+  font-size: calc(1px + 2vh);
+  justify-content: center;
+  min-height: 100vh;
   text-align: center;
 }
 
-.App-header {
-  background-color: #000000;
-  min-height: 100vh;
+.content {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  justify-content: center;
-  font-size: calc(5px + 2vmin);
-  color: #808080;
+  max-width: 1200px;
 }
 
-.App-link {
+a {
+  color: inherit;
+}
+
+a:hover {
   color: #ff0000;
-}
-
-.Preview-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-.Preview {
-  border-style: solid;
-  border-color: #480000;
-  background-color: #333333;
-}
-
-.Thumbnail{
-  padding-bottom: 10px;
-  width: 100%;
 }

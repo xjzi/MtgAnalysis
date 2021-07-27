@@ -1,0 +1,33 @@
+.preview-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  padding-bottom: 50vh;
+}
+
+.preview {
+  background-color: #333333;
+  border-color: #480000;
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+}
+
+.thumbnail-box {
+  background-position: center;
+  background-size: cover;
+  height: 230px;
+}
+
+.preview-card-box {
+  align-content: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.preview-card-box > p{
+  margin: 5px;
+  word-break: break-word;
+}

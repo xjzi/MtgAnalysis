@@ -1,0 +1,15 @@
+.info-box {
+    display: flex;
+    justify-content: center;
+    gap: 10%;
+}
+
+.card-info {
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.board > p {
+    margin: 0px;
+}
