@@ -19,6 +19,7 @@ psql --username postgres <<-EOSQL
 	GRANT USAGE ON SEQUENCE clusters_id_seq TO analysis;
 
 	CREATE ROLE api WITH PASSWORD '$API' LOGIN;
+	GRANT SELECT ON TABLE cards TO api;
 	GRANT SELECT ON TABLE clusters TO api;
 	GRANT SELECT ON TABLE top_cards TO api;
 	GRANT SELECT ON TABLE decks to api;
