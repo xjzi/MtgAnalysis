@@ -1,4 +1,4 @@
-FROM r-base
+FROM r-base:4.1.0
 
 COPY ./src /analysis/src
 
