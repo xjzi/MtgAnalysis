@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Card from '../common/Card';
 import DataHandler from '../common/DataHandler';
-import FetchJson from '../common/FetchJson';
+import GetImage from '../common/GetImage';
 import { Link } from "react-router-dom";
 import styles from './Previews.module.css';
 
@@ -12,15 +12,12 @@ export default function Preview({ id, top }){
 
   useEffect(() => {
     async function fetchThumbnail(){
-      const url = new URL('https://api.scryfall.com/cards/named');
-      url.searchParams.append('exact', top[0]);
-      const json = await FetchJson(url);
-      const art_crop = json.image_uris?.art_crop ?? json.card_faces[0]?.image_uris.art_crop;
-      if(art_crop){
-        setThumbnail(art_crop);
-      } else{
+      const image = await GetImage(top[0], 'art_crop');
+      if(image){
+        setThumbnail(image);
+      } else {
         console.error('API response was not formatted as expected.');
-        setError(true);
+        setError(true)
       }
     }
     fetchThumbnail();

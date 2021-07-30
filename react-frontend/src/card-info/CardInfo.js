@@ -14,10 +14,11 @@ export default function CardInfo({ card }){
       if(image){
         setImage(image);
       } else {
+        console.error('API response was not formatted as expected.');
         setError(true)
       }
     }
-    if(card){ fetchImage(); }
+    fetchImage();
   }, [card]);
 
   const render = () => {
