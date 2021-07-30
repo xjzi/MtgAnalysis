@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: node-api
+spec:
+ replicas: 1
+ selector:
+      matchLabels:
+        app: node
+ template:
+   metadata:
+      labels:
+        app: node
+   spec:
+     containers:
+     - name: api
+       image: poultryghast/node_api
+       imagePullPolicy: IfNotPresent
+       ports:
+         - containerPort: 1337
+       envFrom:
+         - configMapRef:
+             name: api-config
