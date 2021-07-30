@@ -1,5 +1,5 @@
 export default async function FetchJson(url){
-  const response = await fetch(url);
+  const response = await fetch('http://api:1337' + url);
   if (response.ok) {
     return await response.json();
   } else {
