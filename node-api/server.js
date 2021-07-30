@@ -1,11 +1,13 @@
 const port = 1337;
 const express =  require('express');
+const cors = require('cors');
 const app = express();
 const sql = require('./sql');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'))
+app.use(express.static('public'));
+app.use(cors());
 
 app.get("/api/clusters/:cardset", async (req, res) => {
     const api = await sql.previews(req.params.cardset);
