@@ -27,3 +27,10 @@ spec:
             name: api
             port:
               number: 1337
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
