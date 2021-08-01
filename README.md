@@ -3,8 +3,8 @@
 In Magic, designing a powerful deck is often more complex than the main game, so many websites were built to make this process easier. As a Magic player, I'm mostly satisfied with these sites, but as a programmer I wonder how they were made.
 
 This project is another website to help with Magic, with two differences.
-- People can understand how it was built.
-- People can add new few features if they want.
+- People can learn how it was built.
+- People can add new few features.
 
 Each component of this project was put in a seperate directory.
 - `/sql-database`: Postgres database which contains decks and the analysis.
