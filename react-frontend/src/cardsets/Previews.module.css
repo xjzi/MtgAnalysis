@@ -27,7 +27,7 @@
   justify-content: center;
 }
 
-.preview-card-box > p{
-  margin: 5px;
+.preview-card-box > a{
   word-break: break-word;
+  font-size: max(15px, calc(1px + 2vh));
 }
