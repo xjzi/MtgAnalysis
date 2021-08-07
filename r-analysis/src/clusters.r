@@ -1,25 +1,9 @@
 suppressPackageStartupMessages(library("mclust"))
+suppressPackageStartupMessages(library("dbscan"))
 source("features.r")
 source("frechet.r")
 
-getcluster <- function(f, g)
-{
-	return(Mclust(f, G=g, verbose=FALSE)$classification)
-}
-
-rmnoise <- function(c, f)
-{
-	d <- sapply(unique(c), function(i)
-	{
-		decks <- f[c == i,]
-		return(mean(dist(decks)))
-	})
-	rm <- which(d > (median(d) * 2))
-	c[which(c %in% rm)] <- 0
-	return(c)
-}
-
-getclusters <- function(cardtables, g, top)
+getclusters <- function(cardtables, minPts, top)
 {
 	return(unlist(lapply(1:length(cardtables), function(i)
 	{
@@ -27,14 +11,14 @@ getclusters <- function(cardtables, g, top)
 		deckids <- names(cardtable[,1])
 
 		chifeatures <- chi(cardtable)
-		classification <- rmnoise(getcluster(chifeatures, g), chifeatures)
-		
+		classification <- hdbscan(chifeatures, minPts = minPts)$cluster
+
 		ctable <- table(classification[classification > 0])
 		indices <- as.integer(names(ctable))
 		clusterfreq <- as.vector(ctable)
-		
+
 		cardset <- names(cardtables)[[i]]
-		
+
 		clusters <- lapply(1:length(ctable), function(j)
 		{
 			cluster <- list()
@@ -55,6 +39,6 @@ getclusters <- function(cardtables, g, top)
 		})
 
 		return(clusters)
-		
+
 	}), recursive=FALSE))
 }
