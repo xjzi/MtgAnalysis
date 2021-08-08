@@ -23,7 +23,7 @@ This is also my first project that uses more than C#, and using the right tool f
 
 # Website Status
 
-Hosting a website gets pretty expensive over time, so the live version will be stopped at the same time development is stopped. However, a few html files have been saved to give an idea of what the website used to look like. None of the links will work and the card on the theme page will not update based on the card being hovered over, but the samples help show how the live website worked.
+Hosting a website gets pretty expensive over time, so the live version will be stopped at the same time development is stopped. However, a few html files have been saved to give an idea of what the website used to look like. None of the links will work and all interactive features are gone, but the samples help show how the live website worked.
 - https://poultryghast.github.io/MtgAnalysis/home
 - https://poultryghast.github.io/MtgAnalysis/cardset
 - https://poultryghast.github.io/MtgAnalysis/theme
