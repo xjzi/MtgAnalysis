@@ -20,3 +20,10 @@ The website is currently very minimal, and I would need to add a lot more for it
 This is my first large organized project, and the challenges of completing it will affect the way I plan out projects in the future. Getting a working prototype as fast as possible and then upgrading it incrementally is a great way to stay motivated and adaptable to any problems that come up.
 
 This is also my first project that uses more than C#, and using the right tool for the job is now much more important to me than using the tools I already know. Mastery in only one technology is not enough to be a knowledgeable programmer, and learning about new technologies can give insights into what has already been mastered.
+
+# Website Status
+
+Hosting a website gets pretty expensive over time, so the live version will be stopped at the same time development is stopped. However, a few html files have been saved to give an idea of what the website used to look like. None of the links will work and the card details in theme page will not update, but with some imagination it's easy to understand how the live website worked.
+- poultryghast.github.io/MtgAnalysis/home
+- poultryghast.github.io/MtgAnalysis/cardset
+- poultryghast.github.io/MtgAnalysis/theme
