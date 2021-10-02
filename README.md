@@ -33,3 +33,8 @@ There are currently a few static pages which give an idea of the website, but th
 
 # Future
 Servers get pretty expensive. All I currently have is an SQL dump of the database after a few months of scraping. The best way to share the website without paying for a web server is hosting static files on github. I would use Astro Build to generate these files. I spent a lot of time on this project, so I want to display it well, but I'm also tired of working on it.
+
+I could improve a few parts of this project, if I wanted to keep it online.
+- Render frontend with Astro Build
+- Remove password protection between containers in PostgresSQL
+- Try out some continous integration
