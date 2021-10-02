@@ -1,29 +1,40 @@
-# Metagame Analysis of Magic: The Gathering
+# Introduction
+Analyzes and displays common themes for tournament decks in Magic the Gathering
+## External Libraries
+- C# scraper: anglesharp, npgsql, tomlyn
+- Node API: cors, express, pg
+- R Analysis: DBI, analogue, stats, RPostgres, dbscan
 
-In Magic, designing a powerful deck is often more complex than the main game, so many websites have been built to make this process easier. As a Magic player, I'm mostly satisfied with these sites, but as a programmer I wonder how they were made.
-
-This project is another website to help with Magic, with two differences.
-- People can learn how it was built.
-- People can add new few features.
-
-Each component of this project was put in a seperate directory.
+## Strucure
 - `/sql-database`: Postgres database which contains decks and the analysis.
 - `/dotnet-scraper`: Parses [tournament archives](https://magic.wizards.com/en/content/deck-lists-magic-online-products-game-info) and writes decks to the database.
 - `/r-analysis`: Groups similar decks from the scraper and writes the groups to the database.
 - `/node-api`: Queries the database and returns JSON for the frontend to use.
-- `/react-frontend`: User interface for viewing the analysis by querying the API.
-- `/kubernetes-deployment`: Some config files for deploying this project with Kubernetes.
-- `/proxy-database`: A docker compose for starting a database locally.
+- `/react-frontend`: User interface for viewing API data in a graphical way.
+- `/kubernetes-deployment`: Config files for deploying this project with Kubernetes.
+- `/proxy-database`: A docker-compose file for starting a database locally.
 
-The website is currently very minimal, and I would need to add a lot more for it to be able to compete with other websites for Magic, but that was never my goal. I might improve it later, but for now I am tired of it. Feel free to create a pull request if you want to take things into your own hands.
-
-This is my first large organized project, and the challenges of completing it will affect the way I plan out projects in the future. Getting a working prototype as fast as possible and then upgrading it incrementally is a great way to stay motivated and adaptable to any problems that come up.
-
-This is also my first project that uses more than C#, and using the right tool for the job is now much more important to me than using the tools I already know. Mastery in only one technology is not enough to be a knowledgeable programmer, and learning about new technologies can give insights into what has already been mastered.
-
-# Website Status
-
-Hosting a website gets pretty expensive over time, so the live version will be stopped at the same time development is stopped. However, a few html files have been saved to give an idea of what the website used to look like. None of the links will work and all interactive features are gone, but the samples help show how the live website worked.
+# Demonstration
+There are currently a few static pages which give an idea of the website, but the links will not work.
 - https://xjzi.github.io/MtgAnalysis/home
 - https://xjzi.github.io/MtgAnalysis/cardset
 - https://xjzi.github.io/MtgAnalysis/theme
+
+# Motivation
+- Magic the Gathering is a complex game
+- I was curious about how other analysis websites worked
+- I already knew C#
+- R has lots of mature libraries for statistics
+- Javascript is the web standard
+- React is popular and easy to use
+- Kubernetes is overcomplicated but it seemed like a good way to run a cron job
+- Docker is good for declaratively managing program dependencies
+- NodeJS is the standard for web API's
+
+# Future
+Servers get pretty expensive. All I currently have is an SQL dump of the database after a few months of scraping. The best way to share the website without paying for a web server is hosting static files on github. I would use Astro Build to generate these files. I spent a lot of time on this project, so I want to display it well, but I'm also tired of working on it.
+
+I could improve a few parts of this project, if I wanted to keep it online.
+- Render frontend with Astro Build
+- Remove password protection between containers in PostgresSQL
+- Try out some continous integration
