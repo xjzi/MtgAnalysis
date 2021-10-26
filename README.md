@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 Analyzes and displays common themes for tournament decks in Magic the Gathering
 ## External Libraries
 - C# scraper: anglesharp, npgsql, tomlyn
