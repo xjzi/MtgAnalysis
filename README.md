@@ -5,7 +5,7 @@ Analyzes and displays common themes for tournament decks in Magic the Gathering
 - Node API: cors, express, pg
 - R Analysis: DBI, analogue, stats, RPostgres, dbscan
 
-## Strucure
+## Structure
 - `/sql-database`: Postgres database which contains decks and the analysis.
 - `/dotnet-scraper`: Parses [tournament archives](https://magic.wizards.com/en/content/deck-lists-magic-online-products-game-info) and writes decks to the database.
 - `/r-analysis`: Groups similar decks from the scraper and writes the groups to the database.
@@ -14,13 +14,13 @@ Analyzes and displays common themes for tournament decks in Magic the Gathering
 - `/kubernetes-deployment`: Config files for deploying this project with Kubernetes.
 - `/proxy-database`: A docker-compose file for starting a database locally.
 
-# Demonstration
+## Demonstration
 There are currently a few static pages which give an idea of the website, but the links will not work.
 - https://xjzi.github.io/MtgAnalysis/home
 - https://xjzi.github.io/MtgAnalysis/cardset
 - https://xjzi.github.io/MtgAnalysis/theme
 
-# Motivation
+## Motivation
 - Magic the Gathering is a complex game
 - I was curious about how other analysis websites worked
 - I already knew C#
@@ -31,7 +31,7 @@ There are currently a few static pages which give an idea of the website, but th
 - Docker is good for declaratively managing program dependencies
 - NodeJS is the standard for web API's
 
-# Future
+## Future
 Servers get pretty expensive. All I currently have is an SQL dump of the database after a few months of scraping. The best way to share the website without paying for a web server is hosting static files on github. I would use Astro Build to generate these files. I spent a lot of time on this project, so I want to display it well, but I'm also tired of working on it.
 
 I could improve a few parts of this project, if I wanted to keep it online.
